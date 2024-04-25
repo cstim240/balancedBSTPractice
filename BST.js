@@ -101,15 +101,34 @@ export function balancedBST(){
 
         },
 
-        //remove duplicates from array
-        removeDuplicates(array){
-
-        },
-
         //insert a given value into BST
+        // if the tree is empty, the value should be the root node
+        // if the tree is not empty, the value should be inserted in the correct position
+        // does not return anything
         insert(value){
-
+            const newNode = new Node(value);
+            if (this.root === null) {
+              this.root = newNode;
+            } else {
+              this.root = this.insertHelper(this.root, value);
+            }
+            this.elementCount++;
         }, 
+
+        //helper function for insert
+        //returns the parent node with the new node inserted
+        insertHelper(parentNode, value){
+          if (parentNode === null){
+            parentNode = new Node(value);
+            return parentNode;
+          } else if (value < parentNode.data){
+            parentNode.left = this.insertHelper(parentNode.left, value);
+          } else {
+            parentNode.right = this.insertHelper(parentNode.right, value);
+          }
+
+          return parentNode;
+        },
 
         //delete a given value from BST
         deleteItem(value){
