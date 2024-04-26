@@ -123,22 +123,85 @@ export function balancedBST(){
             return parentNode;
           } else if (value < parentNode.data){
             parentNode.left = this.insertHelper(parentNode.left, value);
-          } else {
+          } else if (value > parentNode.data){
             parentNode.right = this.insertHelper(parentNode.right, value);
+          } else {
+            //value already exists in the tree
+            return parentNode;
+          }
+        },
+
+        //delete a given value from BST - returns null if the tree is empty, otherwise returns root node of updated tree
+        //this doesn't balance the tree
+        //checks if value is in the tree, if it is, it deletes the node and returns the root node of the updated tree without the deleted item, if not, it returns null
+        // cases: deleting a leaf node, deleting a node with one child, deleting a node with two children, deleting empty tree
+        deleteItem(value){
+          this.root = this.deleteHelper(this.root, value);
+
+          return this.root;
+        },
+
+        //helper function for deleteItem
+        deleteHelper(node, value){
+          if (node === null){
+            return node;
+          } 
+
+          if (value < node.value){
+            node.left = this.deleteHelper(node.left, value);
+          } else if (value > node.value){
+            node.right = this.deleteHelper(node.right, value);
+          } else {
+            //if the value is the same as the node's value, then this is the node to be deleted
+
+            //node with only one child or no child
+            if (node.left === null){
+              return node.right;
+            } else if (node.right === null){
+              return node.left;
+            }
+
+            //node with 2 children: get the inorder successor (smallest in the right subtree)
+            node.value = this.getSuccessor(node.right);
+            //delete the inorder successor
+            node.right = this.deleteHelper(node.right, node.value);
           }
 
-          return parentNode;
-        },
+          return node;
 
-        //delete a given value from BST
-        deleteItem(value){
+          //recursively find the node to be deleted
 
         },
+
+        getSuccessor(node){
+          let minv = node.value;
+          while (node.left !== null){
+            minv = node.left.value;
+            node = node.left;
+          }
+          return minv;
+        },
+
 
         //function that returns the node with the given value
+        // cases to consider: tree is empty, value is not in the tree, value is in the tree
+        //returns null if tree is empty/not in tree, returns node if value is in tree
         find(value){
-
+          return this.findHelper(this.root, value);
         }, 
+
+        //helper function for find
+        findHelper(node, value){
+          if (node === null){ //tree is empty or value is not in the tree (base case)
+            return null;
+          } else if (value < this.root.value){ //value is less than the root value
+            return this.findHelper(node.left, value);
+          } else if (value > this.root.value){ //value is greater than the root value
+            return this.findHelper(node.right, value);
+          } else {
+            return node; //value is in the tree
+          }
+        },
 
         //accepts an optional callback function as its parameter.
         // traverses the tree in breadth-first order and provide each node as an argument to the callback. 
