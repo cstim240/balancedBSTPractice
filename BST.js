@@ -250,16 +250,58 @@ export function balancedBST(){
 
         }, 
 
+        //description: traverses the tree in order (left, center, right) and provides each node as an argument to the callback
+        // it should return an array of values if no callback is given as an argument
         inOrder(callback){
-
+          const values = [];
+           this.inOrderHelper(this.root, node => {
+              values.push(node.value);
+              if (callback) callback(node);
+           });
+           return values;
         }, 
 
-        preOrder(callback){
+        //inOrder helper function
+        inOrderHelper(node, callback){
+          if (node !== null){
+            this.inOrderHelper(node.left, callback);
+            callback(node);
+            this.inOrderHelper(node.right, callback);
+          } 
+        },
 
+        preOrder(callback){
+          const values = [];
+          this.preOrderHelper(this.root, node => {
+            values.push(node.value);
+            if (callback) callback(node);
+          });
+          return values;
+        },
+
+        preOrderHelper(node, callback){
+          if (node !== null){
+            callback(node);
+            this.preOrderHelper(node.left, callback);
+            this.preOrderHelper(node.right, callback);
+          }
         },
 
         postOrder(callback){
+          const values = [];
+          this.postOrderHelper(this.root, node => {
+            values.push(node.value);
+            if (callback) callback(node);
+          });
+          return values;
+        },
 
+        postOrderHelper(node, callback){
+          if (node !== null){
+            this.postOrderHelper(node.left, callback);
+            this.postOrderHelper(node.right, callback);
+            callback(node);
+          }
         },
 
         isBalanced(){},
