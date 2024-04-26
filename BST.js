@@ -203,6 +203,7 @@ export function balancedBST(){
           }
         },
 
+        // O(n) time complexity for all cases, O(n) space complexity. 
         //accepts an optional callback function as its parameter.
         // traverses the tree in breadth-first order and provide each node as an argument to the callback. 
         // as a result, the callback will perform an operation on each node following the order in which they are traversed. 
@@ -210,6 +211,42 @@ export function balancedBST(){
         // the method should return an array of values if no callback is given as an argument
         // hint: you will want to use an array acting as a queue to keep track of the nodes that you have yet to traverse and to add new ones to the list
         levelOrder(callback){
+          //when callback function is provided, levelOrder will call THIS function for each node it visits during the traversal
+          // this allows you to perform some operation on each node. IE. print each node's value to the console
+          // if no callback function is provided, levelOrder will return an array of values in the order in which they were visited during the traversal
+
+          const result = [];
+          const queue = [];
+          if (this.root !== null){
+            queue.push(this.root);
+
+            //while there are nodes in the queue
+            while (queue.length > 0){
+              const node = queue.shift(); //removes the first element from the queue and returns it
+
+              if (callback){ //if a callback function is provided
+                callback(node);
+              } 
+
+              else { //if no callback function is provided
+                result.push(node.value);
+              }
+
+              //enqueue left child
+              if (node.left) {
+                queue.push(node.left);
+              } 
+
+              //enqueue right child
+              if (node.right){
+                queue.push(node.right);
+              }
+            }
+          }
+
+          if (!callback){ //if no callback function is provided
+            return result;
+          }
 
         }, 
 
