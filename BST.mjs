@@ -90,7 +90,7 @@ export function balancedBST(){
           let rightIndex = 0;
 
           while (leftIndex < left.length && rightIndex < right.length){
-            if (left[leftIndex < right[rightIndex]]){
+            if (left[leftIndex] < right[rightIndex]){
               resultArray.push(left[leftIndex]);
               leftIndex++;
             } else {
