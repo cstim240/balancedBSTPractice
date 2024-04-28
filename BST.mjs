@@ -317,13 +317,14 @@ export function balancedBST(){
             return true;
           }
 
-          const leftHeight = this.height(node.left); 
-          const rightHeight = this.height(node.right);
+          const leftHeight = node.left ? this.height(node.left) : -1; 
+          const rightHeight = node.right ? this.height(node.right) : -1;
 
           //if the difference between the left and right subtree is less than or equal to 1, and the left and right subtrees are balanced
           if (Math.abs(leftHeight - rightHeight) <= 1 && this.isBalancedHelper(node.left) && this.isBalancedHelper(node.right)){
             return true;
             //recursive call to isBalancedHelper to check if the left and right subtrees are balanced
+            return false;
           }
         },
 
