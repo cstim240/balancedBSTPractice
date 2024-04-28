@@ -304,18 +304,52 @@ export function balancedBST(){
           }
         },
 
-        isBalanced(){},
+        //checks if tree is balanced. A balanced tree is one where the difference between heights of the left subtree and the right subtree 
+        //of every node is not more than 1.
+        //returns true if the tree is balanced, false if it is not
+        isBalanced(){
+          return this.isBalancedHelper(this.root);
+        },
+
+        //helper function for isBalanced
+        isBalancedHelper(node){
+          if (node === null){
+            return true;
+          }
+
+          const leftHeight = this.height(node.left); 
+          const rightHeight = this.height(node.right);
+
+          //if the difference between the left and right subtree is less than or equal to 1, and the left and right subtrees are balanced
+          if (Math.abs(leftHeight - rightHeight) <= 1 && this.isBalancedHelper(node.left) && this.isBalancedHelper(node.right)){
+            return true;
+            //recursive call to isBalancedHelper to check if the left and right subtrees are balanced
+          }
+        },
 
         //returns the given node's depth. Depth is defined as the number of edges in the longest path from a given node to a leaf node.
         height(node){
+          if (node === null){
+            return -1;
+          }
 
+          let leftHeight = this.height(node.left);
+          let rightHeight = this.height(node.right);
+
+          //ternary operator - if leftHeight is greater than rightHeight, return leftHeight, else return rightHeight
+          return (leftHeight > rightHeight ? leftHeight : rightHeight) + 1; //returns the maximum height of the left and right subtrees + 1
         }, 
 
         //rebalances an unbalanced tree. Tip: use the traversal method to provude a new array to the BuildTree method
+        //does not return anything
+
+        //1. Traverse the tree in-order and store array in values. O(n). Note this array would be sorted in-order traversal of BST always produces a sorted array
+        //2. Build a balanced BST form the above created sorted array using the recursive approach. O(n)
         rebalance(){
-            
+          let nodes = [];
+          this.inOrder(node => nodes.push(node.value)); //traverse the tree in order and store the values in the nodes array
+
+          this.root = this.buildTree(nodes); 
         }
-
     }
-
 }
