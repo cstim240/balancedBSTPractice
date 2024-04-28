@@ -17,7 +17,10 @@ export function balancedBST(){
         buildTree(array){
           array = this.sort(array);
           array = this.removeDuplicates(array);
-          return this.buildTreeHelper(array, 0, array.length - 1);
+          this.root = this.buildTreeHelper(array, 0, array.length - 1);
+          //if (rootNode)
+            //console.log(`root node is ${rootNode.data}`);
+          return this.root;
         }, 
 
         //helper function for buildTree
@@ -53,6 +56,7 @@ export function balancedBST(){
                   prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
                 }
               };
+              prettyPrint(this.root);
         }, 
 
         //removes duplicates from array
@@ -227,6 +231,7 @@ export function balancedBST(){
           const queue = [];
           if (this.root !== null){
             queue.push(this.root);
+          }
 
             //while there are nodes in the queue
             while (queue.length > 0){
@@ -234,9 +239,7 @@ export function balancedBST(){
 
               if (callback){ //if a callback function is provided
                 callback(node);
-              } 
-
-              else { //if no callback function is provided
+              } else { //if no callback function is provided
                 result.push(node.data);
               }
 
@@ -250,29 +253,36 @@ export function balancedBST(){
                 queue.push(node.right);
               }
             }
-          }
-
-          if (!callback){ //if no callback function is provided
-            return result;
-          }
+          return result;
 
         }, 
 
         //description: traverses the tree in order (left, center, right) and provides each node as an argument to the callback
         // it should return an array of values if no callback is given as an argument
-        inOrder(){
+        inOrder(callback){
           const values = [];
-          this.inOrderHelper(this.root, values);
-          console.log(values);
+          this.inOrderHelper(this.root, callback, values);
           return values;
         }, 
 
         //inOrder helper function
-        inOrderHelper(node, arr){
+        inOrderHelper(node, callback, values){
           if (node !== null){
-            if (node.left) this.inOrderHelper(node.left, arr);
-            arr.push(node.data);
-            if (node.right) this.inOrderHelper(node.right, arr);
+            //console.log(`Visiting node: ${JSON.stringify(node)}`);  // Add logging
+            if (node.left){
+              this.inOrderHelper(node.left, callback, values);
+            }
+
+            if (callback){
+              callback(node);
+            } else {
+              values.push(node.data);
+              //console.log(`added: ${node.data} to values array`);
+            }
+
+            if (node.right){  
+              this.inOrderHelper(node.right, callback, values);
+            } 
           } 
         },
 
@@ -360,8 +370,7 @@ export function balancedBST(){
         //2. Build a balanced BST form the above created sorted array using the recursive approach. O(n)
         rebalance(){
           let nodes = [];
-          this.inOrder(node => nodes.push(node.value)); //traverse the tree in order and store the values in the nodes array
-
+          this.inOrder(node => nodes.push(node.data)); //traverse the tree in order and store the values in the nodes array
           this.root = this.buildTree(nodes); 
         }
     }
