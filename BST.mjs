@@ -83,14 +83,14 @@ export function balancedBST(){
         merge(left, right){
           let resultArray = [];
           let leftIndex = 0;
-          rightIndex = 0;
+          let rightIndex = 0;
 
           while (leftIndex < left.length && rightIndex < right.length){
             if (left[leftIndex < right[rightIndex]]){
               resultArray.push(left[leftIndex]);
               leftIndex++;
             } else {
-              result.push(right[rightIndex]);
+              resultArray.push(right[rightIndex]);
               rightIndex++;
             }
           }
@@ -119,16 +119,24 @@ export function balancedBST(){
         //returns the parent node with the new node inserted
         insertHelper(parentNode, value){
           if (parentNode === null){
-            parentNode = new Node(value);
-            return parentNode;
+            return new Node(value);
           } else if (value < parentNode.data){
-            parentNode.left = this.insertHelper(parentNode.left, value);
+            if (parentNode.left){
+              parentNode.left = this.insertHelper(parentNode.left, value);
+            } else {
+              parentNode.left = new Node(value);
+            }
           } else if (value > parentNode.data){
-            parentNode.right = this.insertHelper(parentNode.right, value);
+            if (parentNode.right){
+              parentNode.right = this.insertHelper(parentNode.right, value);
+            } else {
+              parentNode.right = new Node(value);
+            }
           } else {
             //value already exists in the tree
             return parentNode;
           }
+          return parentNode; //return parentNode at the end of the method
         },
 
         //delete a given value from BST - returns null if the tree is empty, otherwise returns root node of updated tree
@@ -229,7 +237,7 @@ export function balancedBST(){
               } 
 
               else { //if no callback function is provided
-                result.push(node.value);
+                result.push(node.data);
               }
 
               //enqueue left child
@@ -252,28 +260,26 @@ export function balancedBST(){
 
         //description: traverses the tree in order (left, center, right) and provides each node as an argument to the callback
         // it should return an array of values if no callback is given as an argument
-        inOrder(callback){
+        inOrder(){
           const values = [];
-           this.inOrderHelper(this.root, node => {
-              values.push(node.value);
-              if (callback) callback(node);
-           });
-           return values;
+          this.inOrderHelper(this.root, values);
+          console.log(values);
+          return values;
         }, 
 
         //inOrder helper function
-        inOrderHelper(node, callback){
+        inOrderHelper(node, arr){
           if (node !== null){
-            this.inOrderHelper(node.left, callback);
-            callback(node);
-            this.inOrderHelper(node.right, callback);
+            if (node.left) this.inOrderHelper(node.left, arr);
+            arr.push(node.data);
+            if (node.right) this.inOrderHelper(node.right, arr);
           } 
         },
 
         preOrder(callback){
           const values = [];
           this.preOrderHelper(this.root, node => {
-            values.push(node.value);
+            values.push(node.data);
             if (callback) callback(node);
           });
           return values;
@@ -282,24 +288,27 @@ export function balancedBST(){
         preOrderHelper(node, callback){
           if (node !== null){
             callback(node);
-            this.preOrderHelper(node.left, callback);
-            this.preOrderHelper(node.right, callback);
+            if (node.left) this.preOrderHelper(node.left, callback);
+            if (node.right) this.preOrderHelper(node.right, callback);
           }
         },
 
         postOrder(callback){
           const values = [];
-          this.postOrderHelper(this.root, node => {
-            values.push(node.value);
-            if (callback) callback(node);
-          });
+          if (this.root !== null) {
+              this.postOrderHelper(this.root, node => {
+                values.push(node.data);
+                if (callback) callback(node);
+              });
+          }
+          
           return values;
         },
 
         postOrderHelper(node, callback){
           if (node !== null){
-            this.postOrderHelper(node.left, callback);
-            this.postOrderHelper(node.right, callback);
+            if (node.left) this.postOrderHelper(node.left, callback);
+            if (node.right) this.postOrderHelper(node.right, callback);
             callback(node);
           }
         },
@@ -321,11 +330,14 @@ export function balancedBST(){
           const rightHeight = node.right ? this.height(node.right) : -1;
 
           //if the difference between the left and right subtree is less than or equal to 1, and the left and right subtrees are balanced
-          if (Math.abs(leftHeight - rightHeight) <= 1 && this.isBalancedHelper(node.left) && this.isBalancedHelper(node.right)){
+          if (Math.abs(leftHeight - rightHeight) <= 1 
+          && (node.left ? this.isBalancedHelper(node.left) : true) 
+          && (node.right ? this.isBalancedHelper(node.right) : true)
+        ){
             return true;
             //recursive call to isBalancedHelper to check if the left and right subtrees are balanced
-            return false;
           }
+          return false;
         },
 
         //returns the given node's depth. Depth is defined as the number of edges in the longest path from a given node to a leaf node.

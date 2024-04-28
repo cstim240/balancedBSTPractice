@@ -19,7 +19,7 @@ assert.strictEqual(bst.isBalanced(), true);
 console.log('Level Order: ', bst.levelOrder());
 console.log('Pre Order: ', bst.preOrder());
 console.log('Post Order: ', bst.postOrder());
-console.log('In Order: ', bst.inOrder());
+
 
 // 4. Unblanace the tree by adding several numbers > 100
 console.log('Inserting to BST: 101');
@@ -28,9 +28,17 @@ console.log('Inserting to BST: 132');
 bst.insert(132);
 console.log('Inserting to BST: 105');
 bst.insert(105);
+console.log('Inserting to BST: 103');
+bst.insert(103);
+console.log('Inserting to BST: 104');
+bst.insert(104);
+console.log('Inserting to BST: 106');
+bst.insert(106);
+console.log('Inserting to BST: 107');
+bst.insert(107);
 
 // 5. Confirm that the tree is unbalanced by calling isBalanced method
-console.log(`The tree is balanced: T or F? ${bst.isBalanced()}`);
+console.log(`Is the tree is balanced after insertion: T or F? ${bst.isBalanced()}`);
 
 // 6. Balance the tree by calling rebalance. 
 console.log('\nBalancing tree now...\n');
