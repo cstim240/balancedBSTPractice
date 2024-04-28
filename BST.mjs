@@ -110,7 +110,7 @@ export function balancedBST(){
             if (this.root === null) {
               this.root = newNode;
             } else {
-              this.root = this.insertHelper(this.root, value);
+              this.insertHelper(this.root, value);
             }
             this.elementCount++;
         }, 
